@@ -6,6 +6,7 @@ const {
     searchClientsHandler,
     retrieveClientHandler,
     retrieveClientPoliciesHandler,
+    retrievePoliciesHandler,
 } = require('./handlers')
 
 const router = new Router()
@@ -16,5 +17,6 @@ router.post('/login', jsonBodyParser, authenticateUserHandler)
 router.get('/clients', jwtValidation, searchClientsHandler)
 router.get('/clients/:id', jwtValidation, retrieveClientHandler)
 router.get('/clients/:id/policies', jwtValidation, retrieveClientPoliciesHandler)
+router.get('/policies', jwtValidation, retrievePoliciesHandler)
 
 module.exports = router

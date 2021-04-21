@@ -15,6 +15,7 @@ const getAPIToken = require('./get-api-token')
  * @returns {Promise<Array>} User info
  */
 
+
 module.exports = function retrieveClient(requesterUserId, id) {
     if(typeof requesterUserId !== 'string') throw new TypeError('requesterUserId must be a string')
     if(typeof id !== 'string') throw new TypeError('id must be a string')
@@ -38,6 +39,9 @@ module.exports = function retrieveClient(requesterUserId, id) {
 
                 const clients = await clientsResponse.json()
                 const policies = await policiesResponse.json()
+
+// TODO Refactor to follow retrieveClientPolicies
+
 
                 const requesterUser = clients.find(client => client.id === requesterUserId)
 
