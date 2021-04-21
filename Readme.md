@@ -59,3 +59,7 @@ This API runs on Node.js and is build with Express.js.
 ### Block diagram
 
 ![](./doc/block.png)
+
+## TODO
+
+- Finish all unit tests
