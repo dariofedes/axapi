@@ -43,8 +43,29 @@ module.exports = function searchClients(requesterUserId, limit = 10, name) {
                 const policies = await policiesResponse.json()
 
                 const requesterUser = clients.find(client => client.id === requesterUserId)
+                if(!requesterUser) throw new Error('unauthorized')
 
-                if(requesterUser.role === 'user') {
+                if(requesterUser.role === 'admin') {
+                    clients = clients.reduce((acc, client) => {
+                        if(!name || client.name.toLowerCase() === name.toLocaleLowerCase()) {
+                            client.policies = policies.reduce((acc, policy) => {
+                                if(policy.clientId === client.id) {
+                                    acc.push( {
+                                        id: policy.id,
+                                        amountInsured: policy.amountInsured,
+                                        inceptionDate: policy.inceptionDate
+                                    })
+                                }
+
+                                return acc
+                            }, [])
+                            
+                            acc.push(client)
+                        }
+                        
+                        return acc
+                    }, [])
+                } else {
                     requesterUser.policies = policies.reduce((acc, cur) => {
                         if(cur.clientId === requesterUser.id) {
                             acc.push({
@@ -59,44 +80,6 @@ module.exports = function searchClients(requesterUserId, limit = 10, name) {
 
                     return [requesterUser]
                 }
-
-                clients = clients.reduce((acc, client) => {
-                    if(name) {
-                        if(client.name.toLowerCase() === name.toLowerCase()) {
-                            client.policies = policies.reduce((acc, policy) => {
-                                if(policy.clientId === client.id) {
-                                    acc.push( {
-                                        id: policy.id,
-                                        amountInsured: policy.amountInsured,
-                                        inceptionDate: policy.inceptionDate
-                                    })
-                                }
-
-                                return acc
-                            }, [])
-
-                            acc.push(client)
-                        }
-
-                        return acc
-                    } else {
-                        client.policies = policies.reduce((acc, policy) => {
-                            if(policy.clientId === client.id) {
-                                acc.push( {
-                                    id: policy.id,
-                                    amountInsured: policy.amountInsured,
-                                    inceptionDate: policy.inceptionDate
-                                })
-                            }
-
-                            return acc
-                        }, [])
-            
-                        acc.push(client)
-
-                        return acc
-                    }
-                }, [])
 
                 return clients.slice(0, limit)
             })
