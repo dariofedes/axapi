@@ -1,4 +1,5 @@
 module.exports = {
     authenticateUserHandler: require('./authenticate-user-handler'),
-    searchClientsHandler: require('./search-clients-handler')
+    searchClientsHandler: require('./search-clients-handler'),
+    retrieveClientHandler: require('./retrieve-client-handler'),
 }

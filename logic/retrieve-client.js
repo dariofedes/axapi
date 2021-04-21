@@ -4,23 +4,20 @@ const fetch = require('node-fetch')
 const getAPIToken = require('./get-api-token')
 
 /**
- * fetches own user in case of 'user' user or all users in case of 'admin' user
+ * retrieves the given id client
  * 
  * @param {String} requesterUserId the id of the user is searching clients
- * @param {Number} limit clients per page - Default 10
- * @param {String} name Optional - the name for searching
+ * @param {String} id the id of the requested user
  * 
  * @throws {TypeError} if requesterUserId is not a string
- * @throws {TypeError} if limit is not a number
- * @throws {TypeError} if name is not a string
+ * @throws {TypeError} if id is not a string
  * 
- * @returns {Promise<Array>} users that match the query
+ * @returns {Promise<Array>} User info
  */
 
-module.exports = function searchClients(requesterUserId, limit = 10, name) {
+module.exports = function retrieveClients(requesterUserId, id) {
     if(typeof requesterUserId !== 'string') throw new TypeError('requesterUserId must be a string')
-    if(Number.isNaN(limit)) throw new TypeError('limit must be a number')
-    if(name && typeof name !== 'string') throw new TypeError('name must be a string')
+    if(typeof id !== 'string') throw new TypeError('id must be a string')
 
     return (async () => {
         const getClients = async () => fetch(`${API_URL}/clients`, {
@@ -39,12 +36,14 @@ module.exports = function searchClients(requesterUserId, limit = 10, name) {
             .then(async ([clientsResponse, policiesResponse]) => {
                 if(clientsResponse.status === 401 || policiesResponse.status === 401) throw new Error('api token expired')
 
-                let clients = await clientsResponse.json()
+                const clients = await clientsResponse.json()
                 const policies = await policiesResponse.json()
 
                 const requesterUser = clients.find(client => client.id === requesterUserId)
 
                 if(requesterUser.role === 'user') {
+                    if(requesterUser.id !== id) throw new Error('forbidden')
+
                     requesterUser.policies = policies.reduce((acc, cur) => {
                         if(cur.clientId === requesterUser.id) {
                             acc.push({
@@ -60,9 +59,8 @@ module.exports = function searchClients(requesterUserId, limit = 10, name) {
                     return [requesterUser]
                 }
 
-                clients = clients.reduce((acc, client) => {
-                    if(name) {
-                        if(client.name.toLowerCase() === name.toLowerCase()) {
+                const client = clients.reduce((acc, client) => {
+                        if(client.id === id) {
                             client.policies = policies.reduce((acc, policy) => {
                                 if(policy.clientId === client.id) {
                                     acc.push( {
@@ -79,26 +77,11 @@ module.exports = function searchClients(requesterUserId, limit = 10, name) {
                         }
 
                         return acc
-                    } else {
-                        client.policies = policies.reduce((acc, policy) => {
-                            if(policy.clientId === client.id) {
-                                acc.push( {
-                                    id: policy.id,
-                                    amountInsured: policy.amountInsured,
-                                    inceptionDate: policy.inceptionDate
-                                })
-                            }
-
-                            return acc
-                        }, [])
-            
-                        acc.push(client)
-
-                        return acc
-                    }
                 }, [])
 
-                return clients.slice(0, limit)
+                if(!client.length) throw new Error('not found')
+
+                return client
             })
     })()
 }
