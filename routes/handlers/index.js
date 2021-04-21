@@ -4,4 +4,5 @@ module.exports = {
     retrieveClientHandler: require('./retrieve-client-handler'),
     retrieveClientPoliciesHandler: require('./retrieve-client-policies-handler'),
     retrievePoliciesHandler: require('./retrieve-policies-handler'),
+    retrievePolicyHandler: require('./retrieve-policy-handler'),
 }

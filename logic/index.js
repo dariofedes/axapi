@@ -5,4 +5,5 @@ module.exports = {
     retrieveClient: require('./retrieve-client'),
     retrieveClientPolicies: require('./retrieve-client-policies'),
     retrievePolicies: require('./retrieve-policies'),
+    retrievePolicy: require('./retrieve-policy'),
 }
