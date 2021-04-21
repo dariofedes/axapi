@@ -1,8 +1,12 @@
 const { Router } = require('express')
-const { getAPIToken } = require('../logic/')
+const bodyParser = require('body-parser')
+const {
+    authenticateUserHandler
+} = require('./handlers')
 
 const router = new Router()
+const jsonBodyParser = bodyParser.json()
 
-// router.get('/test', getAPIToken)
+router.post('/login', jsonBodyParser, authenticateUserHandler)
 
 module.exports = router

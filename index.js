@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { env: { PORT = 8080, API_URL }} = process
+const { env: { PORT = 8080 }} = process
 
 const express = require('express')
 const router = require('./routes');

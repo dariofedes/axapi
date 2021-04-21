@@ -1,8 +1,13 @@
-require('dotenv').config()
 const { env: { API_URL, USERNAME, PASSWORD }} = process
 
 const fetch = require('node-fetch')
 const Storage = require('../Storage')
+
+/**
+ * Authenticates and retrieves an authorization token for using the main API
+ * 
+ * @returns {Promise<string>} The authorization token
+ */
 
 module.exports = async function getAPIToken() {
     if(Storage.token) return Storage.token
@@ -18,9 +23,9 @@ module.exports = async function getAPIToken() {
         }
     })
 
-    const data = await response.json()
+    const { token } = await response.json()
 
-    Storage.token = data.token
+    Storage.token = token
 
-    return data.token
+    return token
 }
