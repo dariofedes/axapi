@@ -3,4 +3,5 @@ module.exports = {
     authenticateUser: require('./authenticate-user'),
     searchClients: require('./search-clients'),
     retrieveClient: require('./retrieve-client'),
+    retrieveClientPolicies: require('./retrieve-client-policies'),
 }

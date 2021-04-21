@@ -9,10 +9,10 @@ module.exports = async function authenticateUserHandler(req, res) {
     try {
         const userId = await authenticateUser(username, password)
 
-        const token = jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: JWT_EXP })
+        // const token = jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: JWT_EXP })
 
         // const token = jwt.sign({ sub: 'a3b8d425-2b60-4ad7-becc-bedf2ef860bd' }, JWT_SECRET, { expiresIn: JWT_EXP }) // User
-        // const token = jwt.sign({ sub: 'a0ece5db-cd14-4f21-812f-966633e7be86' }, JWT_SECRET, { expiresIn: JWT_EXP }) // Admin
+        const token = jwt.sign({ sub: 'a0ece5db-cd14-4f21-812f-966633e7be86' }, JWT_SECRET, { expiresIn: JWT_EXP }) // Admin
 
         res
             .status(200)
