@@ -1,4 +1,3 @@
-require('dotenv').config()
 const { env: { API_URL }} = process
 
 const fetch = require('node-fetch')
