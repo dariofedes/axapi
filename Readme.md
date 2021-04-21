@@ -9,14 +9,14 @@ Axapi is a REST API middleware that connects with a master API and provides a ne
 ### Important!
 
 For running this API is required the `.env` file, which is not included in this repository for security reasons.
-You can create your own at the root and store in it the following values: 
+You can create your own `.env` at the root directory and store in it the following values: 
 ```
 PORT: The port where the app will be listening
 API_URL: The master API URL
 USERNAME: Credentials to authenticate with master API
 PASSWORD: Credentials to authenticate with master API
 JWT_SECRET: A secret to sign JSON web tokens
-JWT_EXP = JSON web tokens expiration time
+JWT_EXP: JSON web tokens expiration time
 ```
 
 ### Install dependencies
@@ -36,7 +36,7 @@ $ npm test
 $ npm start
 ```
 
-After running it, you will get a prompt message with a confirmation and the URL it is listenint.
+After running it, you will get a prompt message with a confirmation and the URL where the API is listenint.
 
 Example:
 ```
