@@ -34,7 +34,7 @@ module.exports = function authenticateUser(username, password) {
         
         if(error) throw new Error(error)
         
-        const { clientId: userId } = jwtPayloadExtractor(token)
+        const { sub: userId } = jwtPayloadExtractor(token)
 
         return userId
     })()
