@@ -43,8 +43,8 @@ module.exports = function retrieveClientPolicies(requesterUserId, id) {
                 if(!requesterUser) throw new Error('unauthorized')
                 if(requesterUser.id !== id && requesterUser.role !== 'admin') throw new Error('forbidden')
 
-                const user = clients.find(client => client.id === id)
-                if(!user) throw new Error('not found')
+                const client = requesterUser.id === id ? requesterUser : clients.find(client => client.id === id)
+                if(!client) throw new Error('not found')
 
                 const clientPolicies = policies.reduce((acc, policy) => {
                     if(policy.clientId === id) {

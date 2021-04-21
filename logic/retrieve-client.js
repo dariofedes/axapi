@@ -15,7 +15,6 @@ const getAPIToken = require('./get-api-token')
  * @returns {Promise<Array>} User info
  */
 
-
 module.exports = function retrieveClient(requesterUserId, id) {
     if(typeof requesterUserId !== 'string') throw new TypeError('requesterUserId must be a string')
     if(typeof id !== 'string') throw new TypeError('id must be a string')
@@ -40,50 +39,25 @@ module.exports = function retrieveClient(requesterUserId, id) {
                 const clients = await clientsResponse.json()
                 const policies = await policiesResponse.json()
 
-// TODO Refactor to follow retrieveClientPolicies
-
-
                 const requesterUser = clients.find(client => client.id === requesterUserId)
+                if(!requesterUser) throw new Error('unauthorized')
+                if(requesterUser.id !== id && requesterUser.role !== 'admin') throw new Error('forbidden')
 
-                if(requesterUser.role === 'user') {
-                    if(requesterUser.id !== id) throw new Error('forbidden')
+                const client = requesterUser.id === id ? requesterUser : clients.find(client => client.id === id)
+                if(!client) throw new Error('not found')
 
-                    requesterUser.policies = policies.reduce((acc, cur) => {
-                        if(cur.clientId === requesterUser.id) {
-                            acc.push({
-                                id: cur.id,
-                                amountInsured: cur.amountInsured,
-                                inceptionDate: cur.inceptionDate
-                            })
-                        }
+                client.policies = policies.reduce((acc, cur) => {
+                    if(cur.clientId === id) {
+                        acc.push({
+                            id: cur.id,
+                            amountInsured: cur.amountInsured,
+                            inceptionDate: cur.inceptionDate
+                        })
+                    }
 
-                        return acc
-                    }, [])
-
-                    return [requesterUser]
-                }
-
-                const client = clients.reduce((acc, client) => {
-                        if(client.id === id) {
-                            client.policies = policies.reduce((acc, policy) => {
-                                if(policy.clientId === client.id) {
-                                    acc.push( {
-                                        id: policy.id,
-                                        amountInsured: policy.amountInsured,
-                                        inceptionDate: policy.inceptionDate
-                                    })
-                                }
-
-                                return acc
-                            }, [])
-
-                            acc.push(client)
-                        }
-
-                        return acc
+                    return acc
                 }, [])
 
-                if(!client.length) throw new Error('not found')
 
                 return client
             })

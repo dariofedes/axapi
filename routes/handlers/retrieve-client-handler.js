@@ -40,6 +40,15 @@ module.exports = function retrieveClientHandler(req, res) {
                     })
             }
 
+            if(message === 'unauthorized') {
+                res
+                    .status(401)
+                    .json({
+                        code: 401,
+                        message: 'Unauthorized user'
+                    })
+            }
+
             res
                 .status(400)
                 .json({
