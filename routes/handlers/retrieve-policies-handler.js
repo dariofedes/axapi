@@ -20,23 +20,21 @@ module.exports = function retrievePoliciesHandler(req, res) {
                 Storage.token = null
 
                 return await tryRetrievePolicies()
-            }
-
-            if(message === 'unauthorized') {
+            } else if(message === 'unauthorized') {
                 res
                     .status(401)
                     .json({
                         code: 401,
                         message: 'Unauthorized user'
                     })
+            } else {
+                res
+                    .status(400)
+                    .json({
+                        code: 400,
+                        message
+                    })
             }
-
-            res
-                .status(400)
-                .json({
-                    code: 400,
-                    message
-                })
         }
     })()
 }

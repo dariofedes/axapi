@@ -20,23 +20,21 @@ module.exports = function searchClientsHandler(req, res) {
                 Storage.token = null
 
                 return await trySearchClients()
-            }
-
-            if(message === 'unauthorized') {
+            } else if(message === 'unauthorized') {
                 res
                     .status(401)
                     .json({
                         code: 401,
                         message: 'Unauthorized user'
                     })
-            }
-
-            res
-                .status(400)
-                .json({
-                    code: 400,
-                    message
-                })
+            } else {
+                res
+                    .status(400)
+                    .json({
+                        code: 400,
+                        message
+                    })
+            }   
         }
     })()
 }
