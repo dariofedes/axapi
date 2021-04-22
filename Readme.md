@@ -63,3 +63,4 @@ This API runs on Node.js and is build with Express.js.
 ## TODO
 
 - Finish all unit tests
+- Implementing higher order function to wrap handlers
