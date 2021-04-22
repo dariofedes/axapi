@@ -20,7 +20,7 @@ module.exports = function searchClientsHandler(req, res) {
 
                     Storage.token = null
 
-                    return await tryRetrieveClient()
+                    return await trySearchClients()
                 } else {
                     res
                         .status(500)
