@@ -14,12 +14,21 @@ module.exports = function retrieveClientHandler(req, res) {
                 .status(200)
                 .json(client)
         } catch({ message }) {
-            if(message === 'api token expired' && attempts < 3) {
-                attempts++
+            if(message === 'api token expired') {
+                if(attempts < 3) {
+                    attempts++
 
-                Storage.token = null
+                    Storage.token = null
 
-                return await tryRetrieveClient()
+                    return await tryRetrieveClient()
+                } else {
+                    res
+                        .status(500)
+                        .json({
+                            code: 500,
+                            message: 'Internal Server error'
+                        })
+                }
             } else if(message === 'forbidden') {
                 res
                     .status(403)
