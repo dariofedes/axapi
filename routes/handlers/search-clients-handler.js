@@ -14,12 +14,21 @@ module.exports = function searchClientsHandler(req, res) {
                 .status(200)
                 .json(clients)
         } catch({ message }) {
-            if(message === 'api token expired' && attempts < 3) {
-                attempts++
+            if(message === 'api token expired') {
+                if(attempts < 3) {
+                    attempts++
 
-                Storage.token = null
+                    Storage.token = null
 
-                return await trySearchClients()
+                    return await tryRetrieveClient()
+                } else {
+                    res
+                        .status(500)
+                        .json({
+                            code: 500,
+                            message: 'Internal Server error'
+                        })
+                }
             } else if(message === 'unauthorized') {
                 res
                     .status(401)
